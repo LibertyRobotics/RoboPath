@@ -16,5 +16,11 @@ namespace RoboPath
         {
             InitializeComponent();
         }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            About aboutBox = new About();
+            aboutBox.ShowDialog();
+        }
     }
 }

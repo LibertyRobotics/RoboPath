@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("RoboPath")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("RoboPather")]
+[assembly: AssemblyDescription("An Autnomous Robot Pather Built For FTC")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("RoboPath")]
+[assembly: AssemblyCompany("AEMBOT")]
+[assembly: AssemblyProduct("RoboPather")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
