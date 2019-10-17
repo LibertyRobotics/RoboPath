@@ -10,7 +10,9 @@ using System.Windows.Forms;
 
 namespace RoboPath
 {
-
+    /// <summary>
+    /// Tells the program what the possible current placement statues are
+    /// </summary>
     public enum PlacementStatus
     {
         PLACING, REMOVING, NONE
@@ -18,28 +20,41 @@ namespace RoboPath
 
     public partial class Form1 : Form
     {
-
+        //List of waypoints
         private List<Point> points = new List<Point>();
         
+        //Current mousePosition variable
         private Point mousePosition;
 
+        //Current placement status
         private PlacementStatus placementStatus = PlacementStatus.NONE;
        
         public Form1()
         {
             InitializeComponent();
 
+            //Allows the form to see all keys pressed when form is in focous and assigns the file open and save to filter csv files
             this.KeyPreview = true;
             waypointSaveDirectory.Filter = "CSV Files (*.csv)|*.csv| All Files(*.*) | *.*";
             openFileDialog1.Filter = "CSV Files (*.csv)|*.csv| All Files(*.*) | *.*";
         }
 
+        /// <summary>
+        /// Displays the program about window when the about button in the menu strip is pressed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             About aboutBox = new About();
             aboutBox.ShowDialog();
         }
 
+        /// <summary>
+        /// Updated whenever the mouse is moved inside the picture box
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
             mousePosition = e.Location;
