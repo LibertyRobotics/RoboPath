@@ -20,9 +20,7 @@ namespace RoboPath
     {
 
         private List<Point> points = new List<Point>();
-        private List<double> angles = new List<double>();
-        private List<double> distances = new List<double>();
-
+        
         private Point mousePosition;
 
         private PlacementStatus placementStatus = PlacementStatus.NONE;
@@ -32,6 +30,8 @@ namespace RoboPath
             InitializeComponent();
 
             this.KeyPreview = true;
+            waypointSaveDirectory.Filter = "CSV Files (*.csv)|*.csv| All Files(*.*) | *.*";
+            openFileDialog1.Filter = "CSV Files (*.csv)|*.csv| All Files(*.*) | *.*";
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -45,46 +45,47 @@ namespace RoboPath
             mousePosition = e.Location;
         }
 
+        /// <summary>
+        /// Called when a click is registered inside the pictureFrame
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PictureBox1_Click(object sender, EventArgs e)
         {
-            //Adds points to the list when in placing mode
-            if (placementStatus == PlacementStatus.PLACING)
+            if (((MouseEventArgs)e).Button == MouseButtons.Left)
             {
-                double angle = 0;
-                double distance = 0;
-                points.Add(mousePosition);
-                try
+                //Adds points to the list when in placing mode
+                if (placementStatus == PlacementStatus.PLACING)
                 {
-                    angle = ((Math.Atan2((mousePosition.Y - points[points.Count - 2].Y), (mousePosition.X - points[points.Count - 2].X)) * 180) / Math.PI);
-                    distance = Math.Sqrt((Math.Pow(Math.Abs(mousePosition.X - points[points.Count - 2].X), 2)) + (Math.Pow(Math.Abs(mousePosition.Y - points[points.Count - 2].Y), 2)));
-                    angles.Add(angle);
-                    distances.Add(distance);
-                }
-                catch (Exception er)
-                {
+                    double angle = 0;
+                    double distance = 0;
+                    points.Add(mousePosition);
 
-                }
-               
-                pictureBox1.Invalidate();
-            }
 
-            //Removes the points when not in placing mode
-            else if(placementStatus == PlacementStatus.REMOVING)
-            {
-                for (int i = 0; i < points.Count; i++)
+                    pictureBox1.Invalidate();
+                }
+
+                //Will remove clicked points when in removal mode
+                else if (placementStatus == PlacementStatus.REMOVING)
                 {
-                    if (points[i].X > mousePosition.X - 4 && points[i].X < mousePosition.X + 4)
+                    for (int i = 0; i < points.Count; i++)
                     {
-                        if (points[i].Y > mousePosition.Y - 4 && points[i].Y < mousePosition.Y + 4)
+                        if (points[i].X > mousePosition.X - 4 && points[i].X < mousePosition.X + 4)
                         {
+                            if (points[i].Y > mousePosition.Y - 4 && points[i].Y < mousePosition.Y + 4)
+                            {
 
-                            points.RemoveAt(i);
-                            angles.RemoveAt(i);
-                            distances.RemoveAt(i);
-                            pictureBox1.Invalidate();
+                                points.RemoveAt(i);
+
+                                pictureBox1.Invalidate();
+                            }
                         }
                     }
                 }
+            }
+            else if(((MouseEventArgs)e).Button == MouseButtons.Right && placementStatus == PlacementStatus.NONE)
+            {
+
             }
         }
 
@@ -114,12 +115,22 @@ namespace RoboPath
             }
         }
 
+        /// <summary>
+        /// Called when the place waypoints button is pressed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button1_Click(object sender, EventArgs e)
         {
             placementStatus = PlacementStatus.PLACING;
             label1.Text = "Placing Waypoints, Press 'Esc' To Stop...";
         }
 
+        /// <summary>
+        /// Called when the remove waypoints button is pressed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button2_Click(object sender, EventArgs e)
         {
             placementStatus = PlacementStatus.REMOVING;
@@ -131,6 +142,11 @@ namespace RoboPath
 
         }
 
+        /// <summary>
+        /// Called when any key is pressed on the form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
                 if(e.KeyCode == Keys.Escape)
@@ -138,15 +154,52 @@ namespace RoboPath
                     placementStatus = PlacementStatus.NONE;
                     label1.Text = "";
                 }
+
+                if(e.Control && e.KeyCode == Keys.S)
+                {
+                    saveWaypoints();
+                }
         }
 
         private void SavePathToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            saveFileDialog1.Filter = "CSV (*.csv) | *csv | All Files(*.*) | *.*";
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
+            saveWaypoints();
+        }
 
-                OutputToCSV.write(saveFileDialog1.FileName, points, angles, distances);
+        private void OpenPathToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openWaypoints();
+        }
+
+        /// <summary>
+        /// Called when the user wishes to save a waypoint set
+        /// </summary>
+        public void saveWaypoints()
+        {
+            if (waypointSaveDirectory.FileName.Length <= 0)
+            {
+                if (waypointSaveDirectory.ShowDialog() == DialogResult.OK)
+                {
+
+                    CSV.write(waypointSaveDirectory.FileName, points);
+                }
+            }
+            else
+            {
+                CSV.write(waypointSaveDirectory.FileName, points);
+            }
+        }
+
+        /// <summary>
+        /// Called when the user wants to open a waypoint file
+        /// </summary>
+        public void openWaypoints()
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                points = CSV.read(openFileDialog1.FileName);
+                waypointSaveDirectory.FileName = openFileDialog1.FileName;
+                pictureBox1.Invalidate();
             }
         }
     }

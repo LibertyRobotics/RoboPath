@@ -39,7 +39,8 @@
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.waypointSaveDirectory = new System.Windows.Forms.SaveFileDialog();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -84,6 +85,7 @@
             this.openPathToolStripMenuItem.Name = "openPathToolStripMenuItem";
             this.openPathToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openPathToolStripMenuItem.Text = "Open Path";
+            this.openPathToolStripMenuItem.Click += new System.EventHandler(this.OpenPathToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
@@ -141,6 +143,10 @@
             this.label1.Size = new System.Drawing.Size(0, 22);
             this.label1.TabIndex = 4;
             // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -176,7 +182,8 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.SaveFileDialog waypointSaveDirectory;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
 
