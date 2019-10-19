@@ -34,6 +34,7 @@ namespace RoboPath
        
         public Form1()
         {
+            this.MaximizeBox = false;
             InitializeComponent();
 
             try
