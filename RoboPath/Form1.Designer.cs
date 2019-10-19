@@ -78,8 +78,9 @@
             // newPathToolStripMenuItem
             // 
             this.newPathToolStripMenuItem.Name = "newPathToolStripMenuItem";
-            this.newPathToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
+            this.newPathToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.newPathToolStripMenuItem.Text = "New Path";
+            this.newPathToolStripMenuItem.Click += new System.EventHandler(this.NewPathToolStripMenuItem_Click);
             // 
             // savePathToolStripMenuItem
             // 
@@ -105,8 +106,9 @@
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
             // 
             // button1
             // 
@@ -159,7 +161,7 @@
             this.waypointOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.runSubsystemToolStripMenuItem});
             this.waypointOptions.Name = "waypointOptions";
-            this.waypointOptions.Size = new System.Drawing.Size(181, 48);
+            this.waypointOptions.Size = new System.Drawing.Size(156, 26);
             // 
             // runSubsystemToolStripMenuItem
             // 
@@ -227,6 +229,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "RoboPath";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

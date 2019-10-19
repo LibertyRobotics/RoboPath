@@ -184,11 +184,6 @@ namespace RoboPath
             label1.Text = "Removing Waypoints, Press 'Esc' To Stop...";
         }
 
-        private void Form1_KeyPress(object sender, KeyPressEventArgs e)
-        {
-
-        }
-
         /// <summary>
         /// Called when any key is pressed on the form
         /// </summary>
@@ -208,11 +203,24 @@ namespace RoboPath
                 }
         }
 
+        /// <summary>
+        /// Called when the user wants to save a waypoint
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SavePathToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            saveWaypoints();
+            if(points.Count>0)
+                saveWaypoints();
+            else
+                MessageBox.Show("No Points Plotted", "Error");
         }
 
+        /// <summary>
+        /// Called when the user wants to open a waypoints file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OpenPathToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openWaypoints();
@@ -275,6 +283,7 @@ namespace RoboPath
             Properties.Settings.Default.Save();
         }
 
+
         /// <summary>
         /// Removes selected values from list, and removes value for persistant storage
         /// </summary>
@@ -304,7 +313,74 @@ namespace RoboPath
         /// <param name="e"></param>
         private void RunSubsystemToolStripMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            actions[selectedWaypoint] = e.ClickedItem.Text;
+            if (selectedWaypoint > 0)
+                actions[selectedWaypoint] = e.ClickedItem.Text;
+            else
+                actions[selectedWaypoint] = e.ClickedItem.Text;
+        }
+
+        /// <summary>
+        /// Clear the current path and make a new one, make sure changes are saved first
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void NewPathToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (checkSave() || points.Count <= 0)
+            {
+                points.Clear();
+                pictureBox1.Invalidate();
+            }
+            else
+            {
+                if(MessageBox.Show("You may have unsaved changes are you sure you wish to proceed?", "Save Changes", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    points.Clear();
+                    pictureBox1.Invalidate();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Checks if the current path has been saved, and return true or false accordingly 
+        /// </summary>
+        private bool checkSave()
+        {
+            if(waypointSaveDirectory.FileName.Length <= 0)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Added A Save Changes checker on closing
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if(checkSave() == false && points.Count > 0)
+            {
+                if (MessageBox.Show("You may have unsaved changes are you sure you wish to proceed?", "Save Changes", MessageBoxButtons.YesNo) == DialogResult.No)
+                {
+                    e.Cancel = true;
+                }
+            }
+            else
+            {
+               
+            }
+        }
+
+        /// <summary>
+        /// Exit button, self explanatory 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }
