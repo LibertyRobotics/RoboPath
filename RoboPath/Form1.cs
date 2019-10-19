@@ -22,9 +22,12 @@ namespace RoboPath
     {
         //List of waypoints
         private List<Point> points = new List<Point>();
+        private List<string> actions = new List<string>();
         
         //Current mousePosition variable
         private Point mousePosition;
+
+        private int selectedWaypoint = -1;
 
         //Current placement status
         private PlacementStatus placementStatus = PlacementStatus.NONE;
@@ -32,6 +35,19 @@ namespace RoboPath
         public Form1()
         {
             InitializeComponent();
+
+            try
+            {
+                foreach (string item in Properties.Settings.Default.SavedActions)
+                {
+                    runnableSubsytemsList.Items.Add(item);
+                    runSubsystemToolStripMenuItem.DropDownItems.Add(item);
+                }
+            }
+            catch(NullReferenceException e)
+            {
+
+            }
 
             //Allows the form to see all keys pressed when form is in focous and assigns the file open and save to filter csv files
             this.KeyPreview = true;
@@ -69,13 +85,17 @@ namespace RoboPath
         {
             if (((MouseEventArgs)e).Button == MouseButtons.Left)
             {
+                //Reset selected waypoint
+                selectedWaypoint = -1;
+
                 //Adds points to the list when in placing mode
                 if (placementStatus == PlacementStatus.PLACING)
                 {
                     double angle = 0;
                     double distance = 0;
                     points.Add(mousePosition);
-
+                    actions.Add("Normal");
+                    
 
                     pictureBox1.Invalidate();
                 }
@@ -98,9 +118,21 @@ namespace RoboPath
                     }
                 }
             }
+
+            //Open a context menu to add allow addition of running subsytems to waypoints
             else if(((MouseEventArgs)e).Button == MouseButtons.Right && placementStatus == PlacementStatus.NONE)
             {
-
+                for (int i = 0; i < points.Count; i++)
+                {
+                    if (points[i].X > mousePosition.X - 4 && points[i].X < mousePosition.X + 4)
+                    {
+                        if (points[i].Y > mousePosition.Y - 4 && points[i].Y < mousePosition.Y + 4)
+                        {
+                            waypointOptions.Show(pictureBox1, mousePosition);
+                            selectedWaypoint = i;
+                        }
+                    }
+                }
             }
         }
 
@@ -196,12 +228,12 @@ namespace RoboPath
                 if (waypointSaveDirectory.ShowDialog() == DialogResult.OK)
                 {
 
-                    CSV.write(waypointSaveDirectory.FileName, points);
+                    CSV.write(waypointSaveDirectory.FileName, points, actions);
                 }
             }
             else
             {
-                CSV.write(waypointSaveDirectory.FileName, points);
+                CSV.write(waypointSaveDirectory.FileName, points, actions);
             }
         }
 
@@ -216,6 +248,63 @@ namespace RoboPath
                 waypointSaveDirectory.FileName = openFileDialog1.FileName;
                 pictureBox1.Invalidate();
             }
+        }
+
+
+        /// <summary>
+        /// Add a subsytem to the add subsystems window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TestAddSubystem_Click(object sender, EventArgs e)
+        {
+            AddSubsystem addSubsystem = new AddSubsystem(this);
+            addSubsystem.ShowDialog();
+            
+        }
+
+        /// <summary>
+        /// Method used to add an item to the list box
+        /// </summary>
+        /// <param name="name"></param>
+        public void addItem(string name)
+        {
+            runnableSubsytemsList.Items.Add(name);
+            runSubsystemToolStripMenuItem.DropDownItems.Add(name);
+            Properties.Settings.Default.SavedActions.Add(name);
+            Properties.Settings.Default.Save();
+        }
+
+        /// <summary>
+        /// Removes selected values from list, and removes value for persistant storage
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Btn_RemoveSubsystem_Click(object sender, EventArgs e)
+        {
+            if (runnableSubsytemsList.SelectedItems.Count > 0)
+            {
+                runnableSubsytemsList.Items.RemoveAt(runnableSubsytemsList.SelectedIndex);
+                Properties.Settings.Default.SavedActions.Clear();
+                
+                runSubsystemToolStripMenuItem.DropDownItems.Clear();
+                foreach(string action in runnableSubsytemsList.Items)
+                {
+                    runSubsystemToolStripMenuItem.DropDownItems.Add(action);
+                    Properties.Settings.Default.SavedActions.Add(action);
+                }
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        /// <summary>
+        /// Called when one of the actions is selected to be added to the current waypoint
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RunSubsystemToolStripMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            actions[selectedWaypoint] = e.ClickedItem.Text;
         }
     }
 }

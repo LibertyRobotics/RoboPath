@@ -16,7 +16,7 @@ namespace RoboPath
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="points"></param>
-        public static void write(string filePath, List<Point> points)
+        public static void write(string filePath, List<Point> points, List<string> actions)
         {
             string[] lines = new string[points.Count+1];
             lines[0] = "X,Y,Angle,Distance,Action";
@@ -31,12 +31,12 @@ namespace RoboPath
                     double distance = Math.Sqrt((Math.Pow(Math.Abs(points[i+1].X - points[i].X), 2)) + (Math.Pow(Math.Abs(points[i+1].Y - points[i].Y), 2)));
                 
                     //Add all data to a new line in the array
-                    lines[lineNumber] = string.Format("{0},{1},{2},{3}", point.X * Px2InchConversion, point.Y * Px2InchConversion, angle, distance * Px2InchConversion);
+                    lines[lineNumber] = string.Format("{0},{1},{2},{3},{4}", point.X * Px2InchConversion, point.Y * Px2InchConversion, angle, distance * Px2InchConversion, actions[i]);
                 }
                 catch (ArgumentOutOfRangeException e)
                 {
                     //If angle and distance cannot be calculated its the last point in the path set both to zero
-                    lines[lineNumber] = string.Format("{0},{1},{2},{3}", point.X * Px2InchConversion, point.Y * Px2InchConversion, 0, 0);
+                    lines[lineNumber] = string.Format("{0},{1},{2},{3},{4}", point.X * Px2InchConversion, point.Y * Px2InchConversion, 0, 0, actions[i]);
                 }
                 lineNumber++;
                 i++;
