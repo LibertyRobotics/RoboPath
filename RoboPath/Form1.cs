@@ -52,8 +52,8 @@ namespace RoboPath
 
             //Allows the form to see all keys pressed when form is in focous and assigns the file open and save to filter csv files
             this.KeyPreview = true;
-            waypointSaveDirectory.Filter = "CSV Files (*.csv)|*.csv| All Files(*.*) | *.*";
-            openFileDialog1.Filter = "CSV Files (*.csv)|*.csv| All Files(*.*) | *.*";
+            waypointSaveDirectory.Filter = "Java Files (*.java)|*.java| All Files(*.*) | *.*";
+            openFileDialog1.Filter = "Java Files (*.java)|*.java| All Files(*.*) | *.*";
         }
 
         /// <summary>
@@ -237,12 +237,12 @@ namespace RoboPath
                 if (waypointSaveDirectory.ShowDialog() == DialogResult.OK)
                 {
 
-                    CSV.write(waypointSaveDirectory.FileName, points, actions);
+                    OutputJava.write(waypointSaveDirectory.FileName, points, actions);
                 }
             }
             else
             {
-                CSV.write(waypointSaveDirectory.FileName, points, actions);
+                OutputJava.write(waypointSaveDirectory.FileName, points, actions);
             }
         }
 
