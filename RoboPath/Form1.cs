@@ -253,7 +253,7 @@ namespace RoboPath
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                points = CSV.read(openFileDialog1.FileName);
+                points = OutputJava.read(openFileDialog1.FileName);
                 waypointSaveDirectory.FileName = openFileDialog1.FileName;
                 pictureBox1.Invalidate();
             }

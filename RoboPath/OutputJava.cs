@@ -23,14 +23,16 @@ namespace RoboPath
         /// <param name="actions"></param> the actions taken at given waypoints
         public static void write(string filePath, List<Point> points, List<string> actions)
         {
-            string[] lines = new string[7];
+            string[] lines = new string[13];
             string x = "";
             string y = "";
             string distance = "";
             string angle = "";
             string actionStr = "";
 
-            lines[0] = "public class "+ Path.GetFileNameWithoutExtension(filePath)+ " {";
+            lines[0] = "package org.firstinspires.ftc.teamcode.Utilities.Pathing.Paths;";
+            lines[1] = "import java.util.Arrays;";
+            lines[2] = "public class "+ Path.GetFileNameWithoutExtension(filePath)+ " {";
 
             int i = 0;
             foreach(Point point in points)
@@ -46,7 +48,8 @@ namespace RoboPath
                 }
                 catch(ArgumentOutOfRangeException e)
                 {
-
+                    angle += "0,";
+                    distance += "0,";
                 }
 
                 i++;
@@ -63,12 +66,16 @@ namespace RoboPath
             distance=distance.Remove(distance.Length-1);
 
 
-            lines[1] = "static double[] x = {" + x + "};";
-            lines[2] = "static double[] y = {" + y + "};";
-            lines[3] = "static double[] angle = {"+ angle + "};";
-            lines[4] = "static double[] distance = {" + distance +"};";
-            lines[5] = "static String[] actions = {" + actionStr + "};";
-            lines[6] = "}";
+            lines[3] = "static double[] x = {" + x + "};";
+            lines[4] = "static double[] y = {" + y + "};";
+            lines[5] = "static double[] angle = {"+ angle + "};";
+            lines[6] = "static double[] distance = {" + distance +"};";
+            lines[7] = "static String[] actions = {" + actionStr + "};";
+            lines[8] = "@Override";
+            lines[9] = "public String toString(){";
+            lines[10] = "return \"X: \" + Arrays.toString(x) + \" ? Y: \" + Arrays.toString(y) + \" ? Angle: \" + Arrays.toString(angle) + \" ? Distance: \" + Arrays.toString(distance) + \" ? Actions: \" + Arrays.toString(actions);";
+            lines[11] = "}";
+            lines[12] = "}";
 
 
 
